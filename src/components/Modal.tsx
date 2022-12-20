@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { TaskInfo } from '../pages/TaskList';
 import { useAppSelector } from '../store/hooks';
 import { selectTasksId } from '../store/modules/TaskSlice';
+import { TaskInfo } from '../types';
 
 interface ModalProps {
   handleCloseEdit: () => void;
