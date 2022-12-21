@@ -33,8 +33,7 @@ function App() {
               input: {
                 '&::placeholder': {
                   fontWeight: '500',
-                  fontFamily: 'Poppins',
-                  color: 'black'
+                  fontFamily: 'Poppins'
                 }
               }
             }

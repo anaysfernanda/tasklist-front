@@ -15,6 +15,8 @@ import { ColorModeContext } from '../App';
 import { doLogin } from '../store/modules/LoggedSlice';
 import { useAppDispatch } from '../store/hooks';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ModalLogout from './ModalLogout';
 
 const settings = ['Sair'];
 
@@ -23,6 +25,7 @@ function Header() {
 
   const [auth, setAuth] = React.useState(true);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -36,9 +39,22 @@ function Header() {
   };
 
   const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleOpenModal = () => {
+    setOpenConfirmModal(true);
+  };
+
+  const handleConfirmModal = () => {
     dispatch(doLogin(''));
     navigate('/');
     setAnchorElUser(null);
+    setOpenConfirmModal(false);
+  };
+
+  const handleConfirmClose = () => {
+    setOpenConfirmModal(false);
   };
 
   return (
@@ -123,11 +139,16 @@ function Header() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map(setting => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem key={setting} onClick={handleOpenModal}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
+              <ModalLogout
+                handleConfirmClose={handleConfirmClose}
+                handleConfirmModal={handleConfirmModal}
+                isOpen={openConfirmModal}
+              />
             </Box>
           </Toolbar>
         </Container>
