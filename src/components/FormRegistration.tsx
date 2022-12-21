@@ -27,6 +27,8 @@ interface FormRegistrationProps {
   handleRegistration: (validation: FormValidation) => void;
 }
 
+const emailValidator = new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/);
+
 const FormRegistration: React.FC<FormRegistrationProps> = ({ handleRegistration }) => {
   const [email, setEmail] = useState<string>('');
   const [values, setValues] = useState<State>({
@@ -63,8 +65,8 @@ const FormRegistration: React.FC<FormRegistrationProps> = ({ handleRegistration 
     let errorMessage = '';
 
     const isEmailValid = () => {
-      if (email === '') {
-        errorMessage = 'Preencha o e-mail!';
+      if (!emailValidator.test(email)) {
+        errorMessage = 'Preencha um e-mail válido';
         return false;
       } else {
         return true;
@@ -124,6 +126,7 @@ const FormRegistration: React.FC<FormRegistrationProps> = ({ handleRegistration 
         autoComplete="email"
         autoFocus
         value={email || ''}
+        type="adress"
       ></TextField>
       <FormControl fullWidth variant="outlined" sx={{ mb: '10px' }}>
         <InputLabel htmlFor="outlined-adornment-password">Senha *</InputLabel>
