@@ -17,10 +17,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, handleClickOpen, handleDelete
       <CardContent>
         <Grid container>
           <Grid item xs={10}>
-            <Typography gutterBottom variant="body1" component="div">
+            <Typography gutterBottom variant="body1" component="div" sx={{ wordBreak: 'break-all' }}>
               {task.title}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary" sx={{ wordBreak: 'break-all' }}>
               {task.description}
             </Typography>
           </Grid>
