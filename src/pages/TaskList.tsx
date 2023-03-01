@@ -19,16 +19,17 @@ const Contact: React.FC = () => {
   const [message, setAlertMessage] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const tasksRedux = useAppSelector(selectTasks);
-  const loggedRedux = useAppSelector(state => state.logged);
+  const loginRedux = useAppSelector(state => state.login);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!loggedRedux) {
+    console.log(loginRedux);
+    if (!loginRedux) {
       alert('Faça o login!');
       navigate('/');
     }
-  }, [loggedRedux, navigate]);
+  }, [loginRedux, navigate]);
 
   const handleAddTask = (validation: TaskValidation) => {
     if (validation.valid) {
@@ -37,7 +38,7 @@ const Contact: React.FC = () => {
           title: validation.title,
           description: validation.description,
           id: Math.floor(Date.now() / 1000),
-          userEmail: loggedRedux
+          userEmail: loginRedux.user.email
         })
       );
     } else {
@@ -91,7 +92,7 @@ const Contact: React.FC = () => {
           <>
             <InputTask handleAddTask={handleAddTask} />
             {tasksRedux
-              .filter(task => task.userEmail === loggedRedux)
+              .filter(task => task.userEmail === loginRedux.user.email)
               .map(item => {
                 return (
                   <TaskCard

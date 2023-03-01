@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useAppSelector } from '../store/hooks';
-import { selectAccount } from '../store/modules/AccountSlice';
 import { FormValidation } from '../types';
 
 interface State {
@@ -37,7 +36,7 @@ const FormRegistration: React.FC<FormRegistrationProps> = ({ handleRegistration 
     confirm: '',
     showConfirm: false
   });
-  const accountRedux = useAppSelector(selectAccount);
+  const accountRedux = useAppSelector(state => state.account);
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -92,7 +91,7 @@ const FormRegistration: React.FC<FormRegistrationProps> = ({ handleRegistration 
     };
 
     const isEmailExist = () => {
-      if (accountRedux.some(user => email === user.email)) {
+      if (accountRedux.user.email === email) {
         errorMessage = 'E-mail já cadastrado, faça o login!';
         return false;
       } else {

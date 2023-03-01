@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useAppSelector } from '../store/hooks';
-import { selectAccount } from '../store/modules/AccountSlice';
 import { FormValidation } from '../types';
 
 interface State {
@@ -31,7 +30,7 @@ const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
     password: '',
     showPassword: false
   });
-  const accountList = useAppSelector(selectAccount);
+  const accountRedux = useAppSelector(state => state.account);
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -66,8 +65,8 @@ const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
     };
 
     const validateLogin = () => {
-      const userExist = accountList.some(item => email === item.email && values.password === item.password);
-      if (!userExist) {
+      // const userExist = accountRedux.some(item => email === item.email && values.password === item.password);
+      if (email !== accountRedux.user.email && values.password !== accountRedux.user.password) {
         errorMessage = 'E-mail e/ou senha incorretos!';
       } else {
         setEmail('');
@@ -75,7 +74,7 @@ const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
           ...values,
           password: ''
         });
-        return userExist;
+        return accountRedux.user;
       }
     };
 
