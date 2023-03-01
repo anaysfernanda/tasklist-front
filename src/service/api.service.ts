@@ -63,6 +63,7 @@ export const taskList = async (userId: string) => {
 };
 
 export interface CreateTaskType {
+  userId: string;
   id: number;
   title: string;
   description: string;
@@ -70,7 +71,7 @@ export interface CreateTaskType {
 
 export const createTask = async (task: CreateTaskType) => {
   try {
-    const result = await api.post(`/user/${task.id}/tasks`, task);
+    const result = await api.post(`/user/${task.userId}/tasks`, task);
     return result.data;
   } catch (error: any) {
     if (error.request.response) {

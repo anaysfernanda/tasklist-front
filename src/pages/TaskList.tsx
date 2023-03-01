@@ -25,20 +25,19 @@ const Tasks: React.FC = () => {
   const thunkDispatch = useThunkAppDispatch();
 
   useEffect(() => {
-    console.log(loginRedux);
+    console.log(loginRedux.user.id);
+    console.log(taskList);
     if (!loginRedux) {
       alert('Faça o login!');
       navigate('/');
+      return;
     }
-  }, [loginRedux, navigate]);
-
-  useEffect(() => {
     thunkDispatch(taskListAction(loginRedux.user.id));
-  }, [thunkDispatch]);
+  }, [loginRedux, navigate, thunkDispatch]);
 
   const handleAddTask = async (task: CreateTaskType) => {
     const result = await thunkDispatch(
-      creatTaskAction({ id: task.id, title: task.title, description: task.description })
+      creatTaskAction({ userId: task.userId, id: task.id, title: task.title, description: task.description })
     ).unwrap();
     setIsOpen(true);
     setColor('success');
@@ -72,7 +71,7 @@ const Tasks: React.FC = () => {
   const handleConfirmClose = () => {
     setOpenConfirmModal(false);
   };
-
+  console.log(taskList);
   return (
     <>
       <Header />
@@ -89,15 +88,16 @@ const Tasks: React.FC = () => {
         <Grid item xs={11} sm={10} md={8} lg={7} sx={{ my: 3, backgroundColor: 'action.hover', borderRadius: '7px' }}>
           <>
             <InputTask handleAddTask={handleAddTask} />
-            {taskList.map(item => {
-              return (
+
+            {taskList.map((item: any) => {
+              return item ? (
                 <TaskCard
                   key={item.id}
                   handleClickOpen={handleClickOpen}
                   handleDeleteTask={handleDeleteTask}
                   task={item}
                 />
-              );
+              ) : null;
             })}
 
             <Modal id={editingTask} handleCloseEdit={handleClickClose} handleEdit={handleEdit} isOpen={openModal} />

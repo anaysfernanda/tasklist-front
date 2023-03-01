@@ -19,7 +19,7 @@ const InputTask: React.FC<InputTaskProps> = ({ handleAddTask }) => {
       alert('Adicione o nome e/ou a descrição da tarefa.');
       return;
     }
-    handleAddTask({ id: loginRedux.user.id, title, description });
+    handleAddTask({ userId: loginRedux.user.id, id: loginRedux.user.id, title, description });
   };
 
   const handleClear = () => {
