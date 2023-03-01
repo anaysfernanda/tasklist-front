@@ -3,10 +3,10 @@ import { Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import React from 'react';
-import { TaskType } from '../types';
+import { CreateTaskType } from '../service/api.service';
 
 interface TaskCardProps {
-  task: TaskType;
+  task: CreateTaskType;
   handleClickOpen: (id: number) => void;
   handleDeleteTask: (id: number) => void;
 }

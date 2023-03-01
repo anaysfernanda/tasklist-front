@@ -2,7 +2,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useAppSelector } from '../store/hooks';
-import { selectTasksId } from '../store/modules/TaskSlice';
+// import { selectTasksId } from '../store/modules/TasksSlice';
 import { TaskInfo } from '../types';
 
 interface ModalProps {
@@ -15,14 +15,14 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ id, handleCloseEdit: handleClose, handleEdit, isOpen }) => {
   const [newTitle, setNewTitle] = useState<string>('');
   const [newDescription, setNewDescription] = useState<string>('');
-  const taskId = useAppSelector(state => selectTasksId(state, id));
+  // const taskId = useAppSelector(state => selectTasksId(state, id));
 
-  useEffect(() => {
-    if (id !== 0) {
-      setNewTitle(taskId?.title as string);
-      setNewDescription(taskId?.description as string);
-    }
-  }, [taskId]);
+  // useEffect(() => {
+  //   if (id !== 0) {
+  //     setNewTitle(taskId?.title as string);
+  //     setNewDescription(taskId?.description as string);
+  //   }
+  // }, [taskId]);
 
   return (
     <Dialog open={isOpen}>

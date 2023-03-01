@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Snackbar, Stack } from '@mui/material';
+import { AlertColor, Snackbar, Stack } from '@mui/material';
 
 import React from 'react';
 import { AlertElement } from './AlertElement';
@@ -8,9 +8,10 @@ interface BasicAlertProps {
   message: string;
   openAlert: boolean;
   setOpenAlert: (isOpen: boolean) => void;
+  alertColor: AlertColor | undefined;
 }
 
-const BasicAlert: React.FC<BasicAlertProps> = ({ message, openAlert, setOpenAlert }) => {
+const BasicAlert: React.FC<BasicAlertProps> = ({ message, openAlert, setOpenAlert, alertColor }) => {
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -27,7 +28,7 @@ const BasicAlert: React.FC<BasicAlertProps> = ({ message, openAlert, setOpenAler
         onClose={handleClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <AlertElement onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+        <AlertElement onClose={handleClose} severity={alertColor} sx={{ width: '100%' }}>
           {message}
         </AlertElement>
       </Snackbar>

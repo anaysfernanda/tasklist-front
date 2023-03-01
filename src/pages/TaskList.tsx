@@ -1,27 +1,28 @@
-import { Grid } from '@mui/material';
+import { AlertColor, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector, useThunkAppDispatch } from '../store/hooks';
 import { useNavigate } from 'react-router-dom';
-import { addTask, deleteTask, selectTasks, updateTask } from '../store/modules/TaskSlice';
+import { creatTaskAction, selectAll, taskListAction } from '../store/modules/TasksSlice';
 import Modal from '../components/Modal';
 import ModalDelete from '../components/ModalDelete';
 import BasicAlert from '../components/BasicAlert';
 import { TaskInfo } from '../types';
-import { TaskValidation } from '../types/TaskValidation';
 import InputTask from '../components/InputTask';
 import TaskCard from '../components/TaskCard';
+import { CreateTaskType } from '../service/api.service';
 
-const Contact: React.FC = () => {
+const Tasks: React.FC = () => {
   const [editingTask, setEditingTask] = useState<number>(0);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
   const [message, setAlertMessage] = useState<string>('');
+  const [color, setColor] = useState<AlertColor>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const tasksRedux = useAppSelector(selectTasks);
+  const taskList = useAppSelector(selectAll);
   const loginRedux = useAppSelector(state => state.login);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const thunkDispatch = useThunkAppDispatch();
 
   useEffect(() => {
     console.log(loginRedux);
@@ -31,20 +32,17 @@ const Contact: React.FC = () => {
     }
   }, [loginRedux, navigate]);
 
-  const handleAddTask = (validation: TaskValidation) => {
-    if (validation.valid) {
-      dispatch(
-        addTask({
-          title: validation.title,
-          description: validation.description,
-          id: Math.floor(Date.now() / 1000),
-          userEmail: loginRedux.user.email
-        })
-      );
-    } else {
-      setIsOpen(true);
-      setAlertMessage(validation.message);
-    }
+  useEffect(() => {
+    thunkDispatch(taskListAction(loginRedux.user.id));
+  }, [thunkDispatch]);
+
+  const handleAddTask = async (task: CreateTaskType) => {
+    const result = await thunkDispatch(
+      creatTaskAction({ id: task.id, title: task.title, description: task.description })
+    ).unwrap();
+    setIsOpen(true);
+    setColor('success');
+    setAlertMessage('Task criada com sucesso');
   };
 
   const handleClickOpen = (id: number) => {
@@ -57,7 +55,7 @@ const Contact: React.FC = () => {
   };
 
   const handleEdit = (task: TaskInfo) => {
-    dispatch(updateTask({ id: task.id, changes: { description: task.description, title: task.title } }));
+    // dispatch(updateTask({ id: task.id, changes: { description: task.description, title: task.title } }));
     setOpenModal(false);
   };
 
@@ -67,7 +65,7 @@ const Contact: React.FC = () => {
   };
 
   const handleConfirmModal = (id: number) => {
-    dispatch(deleteTask(id));
+    // dispatch(deleteTask(id));
     setOpenConfirmModal(false);
   };
 
@@ -91,18 +89,16 @@ const Contact: React.FC = () => {
         <Grid item xs={11} sm={10} md={8} lg={7} sx={{ my: 3, backgroundColor: 'action.hover', borderRadius: '7px' }}>
           <>
             <InputTask handleAddTask={handleAddTask} />
-            {tasksRedux
-              .filter(task => task.userEmail === loginRedux.user.email)
-              .map(item => {
-                return (
-                  <TaskCard
-                    key={item.id}
-                    handleClickOpen={handleClickOpen}
-                    handleDeleteTask={handleDeleteTask}
-                    task={item}
-                  />
-                );
-              })}
+            {taskList.map(item => {
+              return (
+                <TaskCard
+                  key={item.id}
+                  handleClickOpen={handleClickOpen}
+                  handleDeleteTask={handleDeleteTask}
+                  task={item}
+                />
+              );
+            })}
 
             <Modal id={editingTask} handleCloseEdit={handleClickClose} handleEdit={handleEdit} isOpen={openModal} />
             <ModalDelete
@@ -111,7 +107,7 @@ const Contact: React.FC = () => {
               handleConfirmModal={handleConfirmModal}
               isOpen={openConfirmModal}
             />
-            <BasicAlert message={message} openAlert={isOpen} setOpenAlert={setIsOpen} />
+            <BasicAlert message={message} openAlert={isOpen} setOpenAlert={setIsOpen} alertColor={color} />
           </>
         </Grid>
       </Grid>
@@ -119,4 +115,4 @@ const Contact: React.FC = () => {
   );
 };
 
-export default Contact;
+export default Tasks;

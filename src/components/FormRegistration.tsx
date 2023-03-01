@@ -12,8 +12,7 @@ import {
   TextField
 } from '@mui/material';
 import React, { useState } from 'react';
-import { useAppSelector } from '../store/hooks';
-import { FormValidation } from '../types';
+import { LoginUserType } from '../service/api.service';
 
 interface State {
   password: string;
@@ -23,10 +22,8 @@ interface State {
 }
 
 interface FormRegistrationProps {
-  handleRegistration: (validation: FormValidation) => void;
+  handleRegistration: (form: { email: string; password: string; confirm: string }) => void;
 }
-
-const emailValidator = new RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/);
 
 const FormRegistration: React.FC<FormRegistrationProps> = ({ handleRegistration }) => {
   const [email, setEmail] = useState<string>('');
@@ -36,7 +33,6 @@ const FormRegistration: React.FC<FormRegistrationProps> = ({ handleRegistration 
     confirm: '',
     showConfirm: false
   });
-  const accountRedux = useAppSelector(state => state.account);
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -60,55 +56,8 @@ const FormRegistration: React.FC<FormRegistrationProps> = ({ handleRegistration 
     event.preventDefault();
   };
 
-  const validateForm = (): FormValidation => {
-    let errorMessage = '';
-
-    const isEmailValid = () => {
-      if (!emailValidator.test(email)) {
-        errorMessage = 'Preencha um e-mail válido';
-        return false;
-      } else {
-        return true;
-      }
-    };
-
-    const isValidPassword = () => {
-      if (values.password.length <= 5) {
-        errorMessage = 'A senha deve ter no mínimo 6 caractéres.';
-        return false;
-      } else {
-        return true;
-      }
-    };
-
-    const confirmPassword = () => {
-      if (values.password !== values.confirm) {
-        errorMessage = 'Senhas não conferem!';
-        return false;
-      } else {
-        return true;
-      }
-    };
-
-    const isEmailExist = () => {
-      if (accountRedux.user.email === email) {
-        errorMessage = 'E-mail já cadastrado, faça o login!';
-        return false;
-      } else {
-        return true;
-      }
-    };
-
-    if (isEmailValid() && confirmPassword() && isValidPassword() && isEmailExist()) {
-      return { valid: true, email, password: values.password };
-    } else {
-      return { valid: false, message: errorMessage };
-    }
-  };
-
   const registration = () => {
-    const formValidation = validateForm();
-    handleRegistration(formValidation);
+    handleRegistration({ email, password: values.password, confirm: values.confirm });
   };
 
   return (

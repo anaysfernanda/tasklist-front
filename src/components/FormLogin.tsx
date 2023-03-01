@@ -12,8 +12,7 @@ import {
   TextField
 } from '@mui/material';
 import React, { useState } from 'react';
-import { useAppSelector } from '../store/hooks';
-import { FormValidation } from '../types';
+import { LoginUserType } from '../service/api.service';
 
 interface State {
   password: string;
@@ -21,7 +20,7 @@ interface State {
 }
 
 interface FormLoginProps {
-  handleLogin: (validation: FormValidation) => void;
+  handleLogin: (user: LoginUserType) => void;
 }
 
 const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
@@ -30,7 +29,6 @@ const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
     password: '',
     showPassword: false
   });
-  const accountRedux = useAppSelector(state => state.account);
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -47,47 +45,18 @@ const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
     event.preventDefault();
   };
 
-  const validateForm = (): FormValidation => {
-    let errorMessage = '';
-
-    const isEmailValid = () => {
-      if (email === '' && values.password === '') {
-        errorMessage = 'Preencha o e-mail e senha';
-        return false;
-      } else {
-        setEmail('');
-        setValues({
-          ...values,
-          password: ''
-        });
-        return true;
-      }
-    };
-
-    const validateLogin = () => {
-      // const userExist = accountRedux.some(item => email === item.email && values.password === item.password);
-      if (email !== accountRedux.user.email && values.password !== accountRedux.user.password) {
-        errorMessage = 'E-mail e/ou senha incorretos!';
-      } else {
-        setEmail('');
-        setValues({
-          ...values,
-          password: ''
-        });
-        return accountRedux.user;
-      }
-    };
-
-    if (isEmailValid() && validateLogin()) {
-      return { valid: true, email, password: values.password };
-    } else {
-      return { valid: false, message: errorMessage };
-    }
-  };
-
   const login = () => {
-    const formValidation = validateForm();
-    handleLogin(formValidation);
+    if (email === '' && values.password === '') {
+      alert('Preencha o e-mail e senha');
+      return false;
+    } else {
+      setEmail('');
+      setValues({
+        ...values,
+        password: ''
+      });
+      handleLogin({ email, password: values.password });
+    }
   };
 
   return (

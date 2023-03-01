@@ -12,7 +12,7 @@ interface CreateUserType {
 
 export const createUser = async (user: CreateUserType) => {
   try {
-    const result = await api.post('/user', user);
+    const result = await api.post('/user/registration', user);
     return result.data;
   } catch (error: any) {
     if (error.request.response) {
@@ -27,7 +27,7 @@ export const createUser = async (user: CreateUserType) => {
 };
 
 export interface LoginUserType {
-  username: string;
+  email: string;
   password: string;
 }
 export const loginUser = async (user: LoginUserType) => {
@@ -49,6 +49,28 @@ export const loginUser = async (user: LoginUserType) => {
 export const taskList = async (userId: string) => {
   try {
     const result = await api.get(`/user/${userId}/tasks`);
+    return result.data;
+  } catch (error: any) {
+    if (error.request.response) {
+      const result = error.request.response;
+      return JSON.parse(result);
+    }
+    return {
+      ok: false,
+      message: error.toString()
+    };
+  }
+};
+
+export interface CreateTaskType {
+  id: number;
+  title: string;
+  description: string;
+}
+
+export const createTask = async (task: CreateTaskType) => {
+  try {
+    const result = await api.post(`/user/${task.id}/tasks`, task);
     return result.data;
   } catch (error: any) {
     if (error.request.response) {
