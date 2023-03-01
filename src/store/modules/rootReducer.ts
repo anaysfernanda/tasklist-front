@@ -2,10 +2,10 @@ import { combineReducers } from '@reduxjs/toolkit';
 
 import tasks from './TaskSlice';
 import logged from './LoggedSlice';
-import account from './AccountSlice';
+import login from './loginSlice';
 
 export default combineReducers({
   tasks,
   logged,
-  account
+  login
 });
