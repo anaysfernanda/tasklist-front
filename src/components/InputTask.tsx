@@ -2,38 +2,24 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import React, { useState } from 'react';
-import { TaskValidation } from '../types/TaskValidation';
+import { CreateTaskType } from '../service/api.service';
+import { useAppSelector } from '../store/hooks';
 
 interface InputTaskProps {
-  handleAddTask: (validation: TaskValidation) => void;
+  handleAddTask: (task: CreateTaskType) => void;
 }
 
 const InputTask: React.FC<InputTaskProps> = ({ handleAddTask }) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-
-  const validateInput = (): TaskValidation => {
-    let errorMessage = '';
-
-    const isEmpty = () => {
-      if (title === '' || description === '') {
-        errorMessage = 'Adicione o nome e/ou a descrição da tarefa.';
-        return false;
-      } else {
-        return true;
-      }
-    };
-    if (isEmpty()) {
-      return { valid: true, title, description };
-    } else {
-      return { valid: false, message: errorMessage };
-    }
-  };
+  const loginRedux = useAppSelector(state => state.login);
 
   const task = () => {
-    const taskValidation = validateInput();
-    handleAddTask(taskValidation);
-    handleClear();
+    if (title === '' || description === '') {
+      alert('Adicione o nome e/ou a descrição da tarefa.');
+      return;
+    }
+    handleAddTask({ id: loginRedux.user.id, title, description });
   };
 
   const handleClear = () => {
