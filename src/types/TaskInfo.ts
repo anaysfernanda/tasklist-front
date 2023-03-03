@@ -1,5 +1,5 @@
 interface TaskInfo {
-  id: number;
+  id: string;
   description: string;
   title: string;
 }

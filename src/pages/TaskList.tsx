@@ -3,17 +3,23 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { useAppDispatch, useAppSelector, useThunkAppDispatch } from '../store/hooks';
 import { useNavigate } from 'react-router-dom';
-import { creatTaskAction, selectAll, taskListAction } from '../store/modules/TasksSlice';
+import {
+  creatTaskAction,
+  deleteTaskAction,
+  selectAll,
+  taskListAction,
+  updateTaskAction
+} from '../store/modules/TasksSlice';
 import Modal from '../components/Modal';
 import ModalDelete from '../components/ModalDelete';
 import BasicAlert from '../components/BasicAlert';
 import { TaskInfo } from '../types';
 import InputTask from '../components/InputTask';
 import TaskCard from '../components/TaskCard';
-import { CreateTaskType } from '../service/api.service';
+import { CreateTaskType, DeleteTaskType } from '../service/api.service';
 
 const Tasks: React.FC = () => {
-  const [editingTask, setEditingTask] = useState<number>(0);
+  const [editingTask, setEditingTask] = useState<string>('');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
   const [message, setAlertMessage] = useState<string>('');
@@ -25,8 +31,8 @@ const Tasks: React.FC = () => {
   const thunkDispatch = useThunkAppDispatch();
 
   useEffect(() => {
-    console.log(loginRedux.user.id);
-    console.log(taskList);
+    console.log('id do usuario', loginRedux.user.id);
+    console.log('lista de tasks', taskList);
     if (!loginRedux) {
       alert('Faça o login!');
       navigate('/');
@@ -44,7 +50,7 @@ const Tasks: React.FC = () => {
     setAlertMessage('Task criada com sucesso');
   };
 
-  const handleClickOpen = (id: number) => {
+  const handleClickOpen = (id: string) => {
     setEditingTask(id);
     setOpenModal(true);
   };
@@ -53,25 +59,24 @@ const Tasks: React.FC = () => {
     setOpenModal(false);
   };
 
-  const handleEdit = (task: TaskInfo) => {
-    // dispatch(updateTask({ id: task.id, changes: { description: task.description, title: task.title } }));
+  const handleEdit = (task: CreateTaskType) => {
+    thunkDispatch(updateTaskAction(task));
     setOpenModal(false);
   };
 
-  const handleDeleteTask = (id: number) => {
+  const handleDeleteTask = (id: string) => {
     setEditingTask(id);
     setOpenConfirmModal(true);
   };
 
-  const handleConfirmModal = (id: number) => {
-    // dispatch(deleteTask(id));
+  const handleConfirmModal = (task: DeleteTaskType) => {
+    thunkDispatch(deleteTaskAction(task));
     setOpenConfirmModal(false);
   };
 
   const handleConfirmClose = () => {
     setOpenConfirmModal(false);
   };
-  console.log(taskList);
   return (
     <>
       <Header />
@@ -92,7 +97,7 @@ const Tasks: React.FC = () => {
             {taskList.map((item: any) => {
               return item ? (
                 <TaskCard
-                  key={item.id}
+                  key={item._id}
                   handleClickOpen={handleClickOpen}
                   handleDeleteTask={handleDeleteTask}
                   task={item}

@@ -4,11 +4,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Button } from '@mui/material';
+import { DeleteTaskType } from '../service/api.service';
+import { useAppSelector } from '../store/hooks';
 
 interface ModalDeleteProps {
-  id: number;
+  id: string;
   handleConfirmClose: () => void;
-  handleConfirmModal: (id: number) => void;
+  handleConfirmModal: (task: DeleteTaskType) => void;
   isOpen: boolean;
 }
 
@@ -18,6 +20,8 @@ const ModalDelete: React.FC<ModalDeleteProps> = ({
   handleConfirmModal: handleDeleteModal,
   isOpen
 }) => {
+  const loginRedux = useAppSelector(state => state.login);
+
   return (
     <div>
       <Dialog
@@ -28,7 +32,7 @@ const ModalDelete: React.FC<ModalDeleteProps> = ({
       >
         <DialogTitle id="alert-dialog-title">Deseja excluir a Task?</DialogTitle>
         <DialogActions>
-          <Button onClick={() => handleDeleteModal(id)}>Excluir</Button>
+          <Button onClick={() => handleDeleteModal({ id, userId: loginRedux.user.id })}>Excluir</Button>
           <Button onClick={() => handleCloseModal()}>Cancelar</Button>
         </DialogActions>
       </Dialog>
