@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import React, { useEffect, useState } from 'react';
 import { CreateTaskType } from '../service/api.service';
 import { useAppSelector } from '../store/hooks';
+import { selectById } from '../store/modules/TasksSlice';
 // import { selectTasksId } from '../store/modules/TasksSlice';
 import { TaskInfo } from '../types';
 
@@ -17,15 +18,14 @@ const Modal: React.FC<ModalProps> = ({ id, handleCloseEdit: handleClose, handleE
   const [newTitle, setNewTitle] = useState<string>('');
   const [newDescription, setNewDescription] = useState<string>('');
   const loginRedux = useAppSelector(state => state.login);
+  const taskId = useAppSelector(state => selectById(state, id));
 
-  // const taskId = useAppSelector(state => selectTasksId(state, id));
-
-  // useEffect(() => {
-  //   if (id !== 0) {
-  //     setNewTitle(taskId?.title as string);
-  //     setNewDescription(taskId?.description as string);
-  //   }
-  // }, [taskId]);
+  useEffect(() => {
+    if (id !== '') {
+      setNewTitle(taskId?._title as string);
+      setNewDescription(taskId?._description as string);
+    }
+  }, [taskId]);
 
   return (
     <Dialog open={isOpen}>
