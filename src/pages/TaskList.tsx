@@ -31,9 +31,8 @@ const Tasks: React.FC = () => {
   const thunkDispatch = useThunkAppDispatch();
 
   useEffect(() => {
-    console.log('id do usuario', loginRedux.user.id);
     console.log('lista de tasks', taskList);
-    if (!loginRedux) {
+    if (!loginRedux.logged) {
       alert('Faça o login!');
       navigate('/');
       return;
@@ -69,6 +68,11 @@ const Tasks: React.FC = () => {
     setOpenConfirmModal(true);
   };
 
+  const handleArchiveTask = (id: string) => {
+    setEditingTask(id);
+    setOpenConfirmModal(true);
+  };
+
   const handleConfirmModal = (task: DeleteTaskType) => {
     thunkDispatch(deleteTaskAction(task));
     setOpenConfirmModal(false);
@@ -100,6 +104,7 @@ const Tasks: React.FC = () => {
                   key={item._id}
                   handleClickOpen={handleClickOpen}
                   handleDeleteTask={handleDeleteTask}
+                  handleArchiveTask={handleArchiveTask}
                   task={item}
                 />
               ) : null;

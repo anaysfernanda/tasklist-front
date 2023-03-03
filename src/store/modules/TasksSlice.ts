@@ -8,7 +8,7 @@ import {
   updateTask
 } from '../../service/api.service';
 
-const taskAdapter = createEntityAdapter<CreateTaskType>({
+const taskAdapter = createEntityAdapter<any>({
   selectId: (item: any) => item._id
 });
 
@@ -43,8 +43,8 @@ export const updateTaskAction = createAsyncThunk('update/notes', async (task: Cr
 
   if (result.ok) {
     changes = {
-      _title: task.title,
-      _description: task.description
+      title: task.title,
+      description: task.description
     };
   }
 

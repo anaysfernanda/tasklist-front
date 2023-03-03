@@ -12,10 +12,11 @@ import MenuItem from '@mui/material/MenuItem';
 import TaskIcon from '@mui/icons-material/Task';
 import { FormControlLabel, FormGroup, Switch } from '@mui/material';
 import { ColorModeContext } from '../App';
-// import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch } from '../store/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ModalLogout from './ModalLogout';
+import { doLogin } from '../store/modules/LoginSlice';
 
 const settings = ['Sair'];
 
@@ -25,7 +26,7 @@ function Header() {
   const [auth, setAuth] = React.useState(true);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +47,7 @@ function Header() {
   };
 
   const handleConfirmModal = () => {
+    dispatch(doLogin());
     navigate('/');
     setAnchorElUser(null);
     setOpenConfirmModal(false);
