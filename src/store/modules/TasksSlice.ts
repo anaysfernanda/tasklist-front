@@ -37,14 +37,14 @@ export const deleteTaskAction = createAsyncThunk('delete/tasks', async (task: De
   alert(result.message);
 });
 
-export const updateTaskAction = createAsyncThunk('update/notes', async (task: CreateTaskType) => {
+export const updateTaskAction = createAsyncThunk('update/tasks', async (task: CreateTaskType) => {
   const result = await updateTask(task);
   let changes = {};
 
   if (result.ok) {
     changes = {
-      title: task.title,
-      description: task.description
+      _title: task.title,
+      _description: task.description
     };
   }
 

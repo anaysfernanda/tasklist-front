@@ -56,7 +56,14 @@ const Modal: React.FC<ModalProps> = ({ id, handleCloseEdit: handleClose, handleE
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={() => handleEdit({ userId: loginRedux.user.id, id, title: newTitle, description: newDescription })}
+          onClick={() =>
+            handleEdit({
+              userId: loginRedux.user.id,
+              id,
+              title: newTitle,
+              description: newDescription
+            })
+          }
         >
           Editar
         </Button>

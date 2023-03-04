@@ -42,7 +42,12 @@ const Tasks: React.FC = () => {
 
   const handleAddTask = async (task: CreateTaskType) => {
     const result = await thunkDispatch(
-      creatTaskAction({ userId: task.userId, id: task.id, title: task.title, description: task.description })
+      creatTaskAction({
+        userId: task.userId,
+        id: task.id,
+        title: task.title,
+        description: task.description
+      })
     ).unwrap();
     setIsOpen(true);
     setColor('success');
