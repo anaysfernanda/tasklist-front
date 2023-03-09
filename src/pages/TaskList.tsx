@@ -1,4 +1,4 @@
-import { AlertColor, Grid } from '@mui/material';
+import { AlertColor, Box, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { useAppDispatch, useAppSelector, useThunkAppDispatch } from '../store/hooks';
@@ -25,6 +25,7 @@ const Tasks: React.FC = () => {
   const [message, setAlertMessage] = useState<string>('');
   const [color, setColor] = useState<AlertColor>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [age, setAge] = React.useState('');
   const taskList = useAppSelector(selectAll);
   const loginRedux = useAppSelector(state => state.login);
   const navigate = useNavigate();
@@ -86,6 +87,11 @@ const Tasks: React.FC = () => {
   const handleConfirmClose = () => {
     setOpenConfirmModal(false);
   };
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setAge(event.target.value as string);
+  };
+
   return (
     <>
       <Header />
@@ -102,7 +108,21 @@ const Tasks: React.FC = () => {
         <Grid item xs={11} sm={10} md={8} lg={7} sx={{ my: 3, backgroundColor: 'action.hover', borderRadius: '7px' }}>
           <>
             <InputTask handleAddTask={handleAddTask} />
-
+            <Box sx={{ mx: 5 }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Tasks</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={age}
+                  label="Tasks"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={10}>Todas as Tasks</MenuItem>
+                  <MenuItem value={20}>Arquivadas</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
             {taskList.map((item: any) => {
               return item ? (
                 <TaskCard
