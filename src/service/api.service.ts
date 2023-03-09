@@ -46,9 +46,18 @@ export const loginUser = async (user: LoginUserType) => {
   }
 };
 
-export const taskList = async (userId: string) => {
+export interface TaskListType {
+  userId: string;
+  archived?: boolean;
+}
+
+export const taskList = async (taskList: TaskListType) => {
   try {
-    const result = await api.get(`/user/${userId}/tasks`);
+    const result = await api.get(`/user/${taskList.userId}/tasks`, {
+      params: {
+        archived: taskList.archived
+      }
+    });
     return result.data;
   } catch (error: any) {
     if (error.request.response) {
@@ -67,6 +76,7 @@ export interface CreateTaskType {
   id: string;
   title: string;
   description: string;
+  archived: boolean;
 }
 
 export const createTask = async (task: CreateTaskType) => {

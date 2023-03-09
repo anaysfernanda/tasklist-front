@@ -5,6 +5,7 @@ import {
   deleteTask,
   DeleteTaskType,
   taskList,
+  TaskListType,
   updateTask
 } from '../../service/api.service';
 
@@ -12,8 +13,8 @@ const taskAdapter = createEntityAdapter<any>({
   selectId: (item: any) => item._id
 });
 
-export const taskListAction = createAsyncThunk('task/list', async (userId: string) => {
-  const result = await taskList(userId);
+export const taskListAction = createAsyncThunk('task/list', async (task: TaskListType) => {
+  const result = await taskList(task);
   if (result.ok) {
     return result.data.tasks;
   }
@@ -44,7 +45,8 @@ export const updateTaskAction = createAsyncThunk('update/tasks', async (task: Cr
   if (result.ok) {
     changes = {
       _title: task.title,
-      _description: task.description
+      _description: task.description,
+      _archived: task.archived
     };
   }
 
@@ -59,7 +61,9 @@ export const { selectAll, selectById } = taskAdapter.getSelectors((state: any) =
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState: taskAdapter.getInitialState(),
-  reducers: {},
+  reducers: {
+    updateArquivedTask: taskAdapter.updateOne
+  },
   extraReducers(builder) {
     builder.addCase(taskListAction.fulfilled, taskAdapter.setAll);
     builder.addCase(creatTaskAction.fulfilled, taskAdapter.addOne);
@@ -68,4 +72,5 @@ const tasksSlice = createSlice({
   }
 });
 
+export const { updateArquivedTask } = tasksSlice.actions;
 export default tasksSlice.reducer;

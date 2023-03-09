@@ -61,7 +61,8 @@ const Modal: React.FC<ModalProps> = ({ id, handleCloseEdit: handleClose, handleE
               userId: loginRedux.user.id,
               id,
               title: newTitle,
-              description: newDescription
+              description: newDescription,
+              archived: false
             })
           }
         >

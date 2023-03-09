@@ -8,12 +8,12 @@ import {
   deleteTaskAction,
   selectAll,
   taskListAction,
+  updateArquivedTask,
   updateTaskAction
 } from '../store/modules/TasksSlice';
 import Modal from '../components/Modal';
 import ModalDelete from '../components/ModalDelete';
 import BasicAlert from '../components/BasicAlert';
-import { TaskInfo } from '../types';
 import InputTask from '../components/InputTask';
 import TaskCard from '../components/TaskCard';
 import { CreateTaskType, DeleteTaskType } from '../service/api.service';
@@ -25,11 +25,12 @@ const Tasks: React.FC = () => {
   const [message, setAlertMessage] = useState<string>('');
   const [color, setColor] = useState<AlertColor>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [age, setAge] = React.useState('');
+  const [filled, setFiled] = useState<string>('alltasks');
   const taskList = useAppSelector(selectAll);
   const loginRedux = useAppSelector(state => state.login);
   const navigate = useNavigate();
   const thunkDispatch = useThunkAppDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     console.log('lista de tasks', taskList);
@@ -38,8 +39,9 @@ const Tasks: React.FC = () => {
       navigate('/');
       return;
     }
-    thunkDispatch(taskListAction(loginRedux.user.id));
-  }, [loginRedux, navigate, thunkDispatch]);
+    const archived = filled === 'archived';
+    thunkDispatch(taskListAction({ userId: loginRedux.user.id, archived }));
+  }, [loginRedux, navigate, thunkDispatch, filled]);
 
   const handleAddTask = async (task: CreateTaskType) => {
     const result = await thunkDispatch(
@@ -47,7 +49,8 @@ const Tasks: React.FC = () => {
         userId: task.userId,
         id: task.id,
         title: task.title,
-        description: task.description
+        description: task.description,
+        archived: false
       })
     ).unwrap();
     setIsOpen(true);
@@ -65,6 +68,8 @@ const Tasks: React.FC = () => {
   };
 
   const handleEdit = (task: CreateTaskType) => {
+    console.log('teste');
+
     thunkDispatch(updateTaskAction(task));
     setOpenModal(false);
   };
@@ -74,10 +79,10 @@ const Tasks: React.FC = () => {
     setOpenConfirmModal(true);
   };
 
-  const handleArchiveTask = (id: string) => {
-    setEditingTask(id);
-    setOpenConfirmModal(true);
-  };
+  // const handleArchiveTask = (id: string) => {
+  //   console.log('id', id);
+  //   console.log('taskEditada', taskList);
+  // };
 
   const handleConfirmModal = (task: DeleteTaskType) => {
     thunkDispatch(deleteTaskAction(task));
@@ -89,9 +94,13 @@ const Tasks: React.FC = () => {
   };
 
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
+    setFiled(event.target.value as string);
+    if (filled === 'archived') {
+      thunkDispatch(taskListAction({ userId: loginRedux.user.id, archived: true }));
+    } else {
+      thunkDispatch(taskListAction({ userId: loginRedux.user.id, archived: false }));
+    }
   };
-
   return (
     <>
       <Header />
@@ -108,32 +117,42 @@ const Tasks: React.FC = () => {
         <Grid item xs={11} sm={10} md={8} lg={7} sx={{ my: 3, backgroundColor: 'action.hover', borderRadius: '7px' }}>
           <>
             <InputTask handleAddTask={handleAddTask} />
-            <Box sx={{ mx: 5 }}>
+            <Box sx={{ mx: 5, mb: 3 }}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Tasks</InputLabel>
+                <InputLabel id="demo-simple-select-label">Status da Task</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={age}
-                  label="Tasks"
+                  value={filled}
+                  label="Status da Task"
                   onChange={handleChange}
                 >
-                  <MenuItem value={10}>Todas as Tasks</MenuItem>
-                  <MenuItem value={20}>Arquivadas</MenuItem>
+                  <MenuItem value={'alltasks'}>Todas as Tasks</MenuItem>
+                  <MenuItem value={'archived'}>Arquivadas</MenuItem>
                 </Select>
               </FormControl>
             </Box>
-            {taskList.map((item: any) => {
-              return item ? (
-                <TaskCard
-                  key={item._id}
-                  handleClickOpen={handleClickOpen}
-                  handleDeleteTask={handleDeleteTask}
-                  handleArchiveTask={handleArchiveTask}
-                  task={item}
-                />
-              ) : null;
-            })}
+            {taskList
+              .filter(task => task._archived === (filled === 'archived'))
+              .map((item: any) => {
+                return item ? (
+                  <TaskCard
+                    key={item._id}
+                    handleClickOpen={handleClickOpen}
+                    handleDeleteTask={handleDeleteTask}
+                    handleArchiveTask={() =>
+                      handleEdit({
+                        userId: loginRedux.user.id,
+                        id: item._id,
+                        title: item._title,
+                        description: item._description,
+                        archived: true
+                      })
+                    }
+                    task={item}
+                  />
+                ) : null;
+              })}
 
             <Modal id={editingTask} handleCloseEdit={handleClickClose} handleEdit={handleEdit} isOpen={openModal} />
             <ModalDelete

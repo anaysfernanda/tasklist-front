@@ -13,7 +13,7 @@ interface TaskCardProps {
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, handleClickOpen, handleDeleteTask, handleArchiveTask }) => {
   return (
-    <Card sx={{ my: 2, mx: 5 }} key={task._id}>
+    <Card sx={{ mb: 2, mx: 5 }} key={task._id}>
       <CardContent>
         <Grid container>
           <Grid item xs={9}>
