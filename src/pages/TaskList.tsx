@@ -8,7 +8,6 @@ import {
   deleteTaskAction,
   selectAll,
   taskListAction,
-  updateArquivedTask,
   updateTaskAction
 } from '../store/modules/TasksSlice';
 import Modal from '../components/Modal';
@@ -16,7 +15,7 @@ import ModalDelete from '../components/ModalDelete';
 import BasicAlert from '../components/BasicAlert';
 import InputTask from '../components/InputTask';
 import TaskCard from '../components/TaskCard';
-import { CreateTaskType, DeleteTaskType } from '../service/api.service';
+import { CreateTaskType, DeleteTaskType, UpdateTaskType } from '../service/api.service';
 
 const Tasks: React.FC = () => {
   const [editingTask, setEditingTask] = useState<string>('');
@@ -30,7 +29,6 @@ const Tasks: React.FC = () => {
   const loginRedux = useAppSelector(state => state.login);
   const navigate = useNavigate();
   const thunkDispatch = useThunkAppDispatch();
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     console.log('lista de tasks', taskList);
@@ -67,7 +65,7 @@ const Tasks: React.FC = () => {
     setOpenModal(false);
   };
 
-  const handleEdit = (task: CreateTaskType) => {
+  const handleEdit = (task: UpdateTaskType) => {
     console.log('teste');
 
     thunkDispatch(updateTaskAction(task));
@@ -146,7 +144,7 @@ const Tasks: React.FC = () => {
                         id: item._id,
                         title: item._title,
                         description: item._description,
-                        archived: true
+                        archived: !item._archived
                       })
                     }
                     task={item}

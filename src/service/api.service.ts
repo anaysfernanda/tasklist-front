@@ -76,7 +76,7 @@ export interface CreateTaskType {
   id: string;
   title: string;
   description: string;
-  archived: boolean;
+  archived?: boolean;
 }
 
 export const createTask = async (task: CreateTaskType) => {
@@ -116,7 +116,15 @@ export const deleteTask = async (task: DeleteTaskType) => {
   }
 };
 
-export const updateTask = async (task: CreateTaskType) => {
+export interface UpdateTaskType {
+  userId: string;
+  id: string;
+  title?: string;
+  description?: string;
+  archived?: boolean;
+}
+
+export const updateTask = async (task: UpdateTaskType) => {
   try {
     const result = await api.put(`user/${task.userId}/tasks/${task.id}`, task);
     return result.data;

@@ -6,7 +6,8 @@ import {
   DeleteTaskType,
   taskList,
   TaskListType,
-  updateTask
+  updateTask,
+  UpdateTaskType
 } from '../../service/api.service';
 
 const taskAdapter = createEntityAdapter<any>({
@@ -38,7 +39,7 @@ export const deleteTaskAction = createAsyncThunk('delete/tasks', async (task: De
   alert(result.message);
 });
 
-export const updateTaskAction = createAsyncThunk('update/tasks', async (task: CreateTaskType) => {
+export const updateTaskAction = createAsyncThunk('update/tasks', async (task: UpdateTaskType) => {
   const result = await updateTask(task);
   let changes = {};
 
@@ -52,6 +53,7 @@ export const updateTaskAction = createAsyncThunk('update/tasks', async (task: Cr
 
   return {
     id: task.id,
+    userId: task.userId,
     changes
   };
 });

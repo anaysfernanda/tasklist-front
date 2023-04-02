@@ -1,15 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { CreateTaskType } from '../service/api.service';
+import { UpdateTaskType } from '../service/api.service';
 import { useAppSelector } from '../store/hooks';
 import { selectById } from '../store/modules/TasksSlice';
-// import { selectTasksId } from '../store/modules/TasksSlice';
-import { TaskInfo } from '../types';
 
 interface ModalProps {
   handleCloseEdit: () => void;
-  handleEdit: (task: CreateTaskType) => void;
+  handleEdit: (task: UpdateTaskType) => void;
   isOpen: boolean;
   id: string;
 }

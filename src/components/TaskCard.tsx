@@ -27,14 +27,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, handleClickOpen, handleDelete
           <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Grid>
               <>
-                <IconButton
-                  onClick={() => handleClickOpen(task._id)}
-                  edge="end"
-                  aria-label="edit"
-                  // sx={{ marginRight: '5px' }}
-                >
-                  <EditIcon />
-                </IconButton>
+                {!task._archived && (
+                  <IconButton
+                    onClick={() => handleClickOpen(task._id)}
+                    edge="end"
+                    aria-label="edit"
+                    // sx={{ marginRight: '5px' }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                )}
                 <IconButton onClick={() => handleDeleteTask(task._id)} edge="end" aria-label="delete">
                   <DeleteIcon />
                 </IconButton>
