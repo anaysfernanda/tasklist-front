@@ -16,11 +16,13 @@ import BasicAlert from '../components/BasicAlert';
 import InputTask from '../components/InputTask';
 import TaskCard from '../components/TaskCard';
 import { CreateTaskType, DeleteTaskType, UpdateTaskType } from '../service/api.service';
+import ModalArchived from '../components/ModalArchived';
 
 const Tasks: React.FC = () => {
   const [editingTask, setEditingTask] = useState<string>('');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
+  const [openArchivedModal, setOpenArchivedModal] = useState<boolean>(false);
   const [message, setAlertMessage] = useState<string>('');
   const [color, setColor] = useState<AlertColor>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -65,11 +67,19 @@ const Tasks: React.FC = () => {
     setOpenModal(false);
   };
 
-  const handleEdit = (task: UpdateTaskType) => {
-    console.log('teste');
+  const handleArchivedOpen = (id: string) => {
+    setEditingTask(id);
+    setOpenArchivedModal(true);
+  };
 
+  const handleCloseArchived = () => {
+    setOpenArchivedModal(false);
+  };
+
+  const handleEdit = (task: UpdateTaskType) => {
     thunkDispatch(updateTaskAction(task));
     setOpenModal(false);
+    setOpenArchivedModal(false);
   };
 
   const handleDeleteTask = (id: string) => {
@@ -78,8 +88,8 @@ const Tasks: React.FC = () => {
   };
 
   // const handleArchiveTask = (id: string) => {
-  //   console.log('id', id);
-  //   console.log('taskEditada', taskList);
+  //   setEditingTask(id);
+  //   setOpenArchivedModal(true);
   // };
 
   const handleConfirmModal = (task: DeleteTaskType) => {
@@ -134,21 +144,30 @@ const Tasks: React.FC = () => {
               .filter(task => task._archived === (filled === 'archived'))
               .map((item: any) => {
                 return item ? (
-                  <TaskCard
-                    key={item._id}
-                    handleClickOpen={handleClickOpen}
-                    handleDeleteTask={handleDeleteTask}
-                    handleArchiveTask={() =>
-                      handleEdit({
-                        userId: loginRedux.user.id,
-                        id: item._id,
-                        title: item._title,
-                        description: item._description,
-                        archived: !item._archived
-                      })
-                    }
-                    task={item}
-                  />
+                  <>
+                    <TaskCard
+                      key={item._id}
+                      handleClickOpen={handleClickOpen}
+                      handleDeleteTask={handleDeleteTask}
+                      handleArchiveTask={handleArchivedOpen}
+                      task={item}
+                    />
+                    <ModalArchived
+                      alternative={item._archived ? 'desarquivar' : 'arquivar'}
+                      handleEdit={() =>
+                        handleEdit({
+                          userId: loginRedux.user.id,
+                          id: item._id,
+                          title: item._title,
+                          description: item._description,
+                          archived: !item._archived
+                        })
+                      }
+                      handleCloseEdit={handleCloseArchived}
+                      id={item._id}
+                      isOpen={openArchivedModal}
+                    />
+                  </>
                 ) : null;
               })}
 
