@@ -11,13 +11,15 @@ import {
 } from '../../service/api.service';
 
 const taskAdapter = createEntityAdapter<any>({
-  selectId: (item: any) => item._id
+  selectId: (item: any) => item.id
 });
 
 export const taskListAction = createAsyncThunk('task/list', async (task: TaskListType) => {
   const result = await taskList(task);
+  console.log('result', result.data);
+
   if (result.ok) {
-    return result.data.tasks;
+    return result.data;
   }
   return [];
 });
@@ -34,7 +36,7 @@ export const deleteTaskAction = createAsyncThunk('delete/tasks', async (task: De
   const result = await deleteTask(task);
   console.log('teste', result.data);
   if (result.ok) {
-    return result.data[0]._id;
+    return result.data[0].id;
   }
   alert(result.message);
 });
@@ -45,9 +47,9 @@ export const updateTaskAction = createAsyncThunk('update/tasks', async (task: Up
 
   if (result.ok) {
     changes = {
-      _title: task.title,
-      _description: task.description,
-      _archived: task.archived
+      title: task.title,
+      description: task.description,
+      archived: task.archived
     };
   }
 

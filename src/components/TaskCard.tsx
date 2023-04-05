@@ -13,23 +13,23 @@ interface TaskCardProps {
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, handleClickOpen, handleDeleteTask, handleArchiveTask }) => {
   return (
-    <Card sx={{ mb: 2, mx: 5 }} key={task._id}>
+    <Card sx={{ mb: 2, mx: 5 }} key={task.id}>
       <CardContent>
         <Grid container>
           <Grid item xs={9}>
             <Typography gutterBottom variant="body1" component="div" sx={{ wordBreak: 'break-all' }}>
-              {task._title}
+              {task.title}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ wordBreak: 'break-all' }}>
-              {task._description}
+              {task.description}
             </Typography>
           </Grid>
           <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Grid>
               <>
-                {!task._archived && (
+                {!task.archived && (
                   <IconButton
-                    onClick={() => handleClickOpen(task._id)}
+                    onClick={() => handleClickOpen(task.id)}
                     edge="end"
                     aria-label="edit"
                     // sx={{ marginRight: '5px' }}
@@ -37,10 +37,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, handleClickOpen, handleDelete
                     <EditIcon />
                   </IconButton>
                 )}
-                <IconButton onClick={() => handleDeleteTask(task._id)} edge="end" aria-label="delete">
+                <IconButton onClick={() => handleDeleteTask(task.id)} edge="end" aria-label="delete">
                   <DeleteIcon />
                 </IconButton>
-                <IconButton onClick={() => handleArchiveTask(task._id)} edge="end" aria-label="archive">
+                <IconButton onClick={() => handleArchiveTask(task.id)} edge="end" aria-label="archive">
                   <ArchiveIcon />
                 </IconButton>
               </>

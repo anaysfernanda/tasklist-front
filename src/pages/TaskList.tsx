@@ -58,7 +58,7 @@ const Tasks: React.FC = () => {
     setAlertMessage('Task criada com sucesso');
   };
 
-  const handleClickOpen = (id: string) => {
+  const handleEditOpen = (id: string) => {
     setEditingTask(id);
     setOpenModal(true);
   };
@@ -82,7 +82,7 @@ const Tasks: React.FC = () => {
     setOpenArchivedModal(false);
   };
 
-  const handleDeleteTask = (id: string) => {
+  const handleDeleteOpen = (id: string) => {
     setEditingTask(id);
     setOpenConfirmModal(true);
   };
@@ -141,36 +141,25 @@ const Tasks: React.FC = () => {
               </FormControl>
             </Box>
             {taskList
-              .filter(task => task._archived === (filled === 'archived'))
+              .filter(task => task.archived === (filled === 'archived'))
               .map((item: any) => {
                 return item ? (
-                  <>
+                  <div key={item.id}>
                     <TaskCard
-                      key={item._id}
-                      handleClickOpen={handleClickOpen}
-                      handleDeleteTask={handleDeleteTask}
-                      handleArchiveTask={handleArchivedOpen}
+                      handleClickOpen={() => handleEditOpen(item.id)}
+                      handleDeleteTask={() => handleDeleteOpen(item.id)}
+                      handleArchiveTask={() => handleArchivedOpen(item.id)}
                       task={item}
                     />
-                    <ModalArchived
-                      alternative={item._archived ? 'desarquivar' : 'arquivar'}
-                      handleEdit={() =>
-                        handleEdit({
-                          userId: loginRedux.user.id,
-                          id: item._id,
-                          title: item._title,
-                          description: item._description,
-                          archived: !item._archived
-                        })
-                      }
-                      handleCloseEdit={handleCloseArchived}
-                      id={item._id}
-                      isOpen={openArchivedModal}
-                    />
-                  </>
+                  </div>
                 ) : null;
               })}
-
+            <ModalArchived
+              handleEdit={handleEdit}
+              handleCloseEdit={handleCloseArchived}
+              id={editingTask}
+              isOpen={openArchivedModal}
+            />
             <Modal id={editingTask} handleCloseEdit={handleClickClose} handleEdit={handleEdit} isOpen={openModal} />
             <ModalDelete
               id={editingTask}

@@ -5,17 +5,21 @@ import { UpdateTaskType } from '../service/api.service';
 import { useAppSelector } from '../store/hooks';
 import { selectById } from '../store/modules/TasksSlice';
 
-interface ModalProps {
+interface ModalArchivedProps {
   handleCloseEdit: () => void;
   handleEdit: (task: UpdateTaskType) => void;
   isOpen: boolean;
   id: string;
-  alternative: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ id, handleCloseEdit: handleClose, handleEdit, isOpen, alternative }) => {
+const ModalArchived: React.FC<ModalArchivedProps> = ({ id, handleCloseEdit: handleClose, handleEdit, isOpen }) => {
   const loginRedux = useAppSelector(state => state.login);
-  const taskId = useAppSelector(state => selectById(state, id));
+  const task = useAppSelector(state => selectById(state, id));
+  if (!task) {
+    return null;
+  }
+  console.log('task modal', task);
+  const alternative = task.archived ? 'desarquivar' : 'arquivar';
 
   return (
     <Dialog open={isOpen}>
@@ -26,7 +30,8 @@ const Modal: React.FC<ModalProps> = ({ id, handleCloseEdit: handleClose, handleE
           onClick={() =>
             handleEdit({
               userId: loginRedux.user.id,
-              id
+              ...task,
+              archived: !task.archived
             })
           }
         >
@@ -38,4 +43,4 @@ const Modal: React.FC<ModalProps> = ({ id, handleCloseEdit: handleClose, handleE
   );
 };
 
-export default Modal;
+export default ModalArchived;
