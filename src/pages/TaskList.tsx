@@ -1,7 +1,7 @@
 import { AlertColor, Box, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
-import { useAppDispatch, useAppSelector, useThunkAppDispatch } from '../store/hooks';
+import { useAppSelector, useThunkAppDispatch } from '../store/hooks';
 import { useNavigate } from 'react-router-dom';
 import {
   creatTaskAction,
@@ -86,11 +86,6 @@ const Tasks: React.FC = () => {
     setEditingTask(id);
     setOpenConfirmModal(true);
   };
-
-  // const handleArchiveTask = (id: string) => {
-  //   setEditingTask(id);
-  //   setOpenArchivedModal(true);
-  // };
 
   const handleConfirmModal = (task: DeleteTaskType) => {
     thunkDispatch(deleteTaskAction(task));

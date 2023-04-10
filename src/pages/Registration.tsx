@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import BasicAlert from '../components/BasicAlert';
 import { Card } from '../components/Card/Card';
 import FormRegistration from '../components/FormRegistration';
-import { createUser, LoginUserType } from '../service/api.service';
+import { createUser } from '../service/api.service';
 
 const Registration: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string>('');
@@ -41,7 +41,7 @@ const Registration: React.FC = () => {
       navigate('/');
       return;
     }
-    handleError(result.message.toString());
+    handleError('O e-mail já possui cadastro. Faça o login!');
     return;
   };
 

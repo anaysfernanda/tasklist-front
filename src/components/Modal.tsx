@@ -20,8 +20,8 @@ const Modal: React.FC<ModalProps> = ({ id, handleCloseEdit: handleClose, handleE
 
   useEffect(() => {
     if (id !== '') {
-      setNewTitle(taskId?._title as string);
-      setNewDescription(taskId?._description as string);
+      setNewTitle(taskId?.title as string);
+      setNewDescription(taskId?.description as string);
     }
   }, [taskId]);
 

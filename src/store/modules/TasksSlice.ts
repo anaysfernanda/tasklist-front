@@ -34,9 +34,8 @@ export const creatTaskAction = createAsyncThunk('create/task', async (task: Crea
 
 export const deleteTaskAction = createAsyncThunk('delete/tasks', async (task: DeleteTaskType) => {
   const result = await deleteTask(task);
-  console.log('teste', result.data);
   if (result.ok) {
-    return result.data[0].id;
+    return result.data;
   }
   alert(result.message);
 });

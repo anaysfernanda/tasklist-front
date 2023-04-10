@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import React from 'react';
 import { UpdateTaskType } from '../service/api.service';
 import { useAppSelector } from '../store/hooks';
 import { selectById } from '../store/modules/TasksSlice';
@@ -18,7 +18,6 @@ const ModalArchived: React.FC<ModalArchivedProps> = ({ id, handleCloseEdit: hand
   if (!task) {
     return null;
   }
-  console.log('task modal', task);
   const alternative = task.archived ? 'desarquivar' : 'arquivar';
 
   return (

@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { AlertColor, Box, Button, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import React, { useState } from 'react';
 import { CreateTaskType } from '../service/api.service';
 import { useAppSelector } from '../store/hooks';
+import BasicAlert from './BasicAlert';
 
 interface InputTaskProps {
   handleAddTask: (task: CreateTaskType) => void;
@@ -12,11 +13,16 @@ interface InputTaskProps {
 const InputTask: React.FC<InputTaskProps> = ({ handleAddTask }) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [message, setAlertMessage] = useState<string>('');
+  const [color, setColor] = useState<AlertColor>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const loginRedux = useAppSelector(state => state.login);
 
   const task = () => {
     if (title === '' || description === '') {
-      alert('Adicione o nome e/ou a descrição da tarefa.');
+      setIsOpen(true);
+      setColor('error');
+      setAlertMessage('Adicione o nome e/ou a descrição da tarefa.');
       return;
     }
     handleAddTask({
@@ -121,6 +127,7 @@ const InputTask: React.FC<InputTaskProps> = ({ handleAddTask }) => {
           Adicionar
         </Button>
       </Box>
+      <BasicAlert message={message} openAlert={isOpen} setOpenAlert={setIsOpen} alertColor={color} />
     </>
   );
 };
