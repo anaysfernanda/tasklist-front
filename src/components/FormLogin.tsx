@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+  AlertColor,
   Box,
   Button,
   FormControl,
@@ -13,6 +14,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { LoginUserType } from '../service/api.service';
+import BasicAlert from './BasicAlert';
 
 interface State {
   password: string;
@@ -29,6 +31,9 @@ const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
     password: '',
     showPassword: false
   });
+  const [message, setAlertMessage] = useState<string>('');
+  const [color, setColor] = useState<AlertColor>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -47,7 +52,9 @@ const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
 
   const login = () => {
     if (email === '' && values.password === '') {
-      alert('Preencha o e-mail e senha');
+      setIsOpen(true);
+      setColor('error');
+      setAlertMessage('Preencha o e-mail e senha');
       return false;
     } else {
       setEmail('');
@@ -104,6 +111,7 @@ const FormLogin: React.FC<FormLoginProps> = ({ handleLogin }) => {
           {'Não tem uma conta ainda? Crie uma conta'}
         </Link>
       </Box>
+      <BasicAlert message={message} openAlert={isOpen} setOpenAlert={setIsOpen} alertColor={color} />
     </>
   );
 };
