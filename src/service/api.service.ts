@@ -12,7 +12,7 @@ interface CreateUserType {
 
 export const createUser = async (user: CreateUserType) => {
   try {
-    const result = await api.post('/user/registration', user);
+    const result = await api.post('/user/', user);
     return result.data;
   } catch (error: any) {
     if (error.request.response) {
@@ -32,7 +32,7 @@ export interface LoginUserType {
 }
 export const loginUser = async (user: LoginUserType) => {
   try {
-    const result = await api.post('/user/', user);
+    const result = await api.post('/user/login', user);
     return result.data;
   } catch (error: any) {
     if (error.request.response) {
