@@ -35,9 +35,7 @@ const Registration: React.FC = () => {
 
     const result = await createUser({ email: form.email, password: form.password });
     if (result.ok) {
-      setIsOpen(true);
-      setColor('success');
-      setAlertMessage('Usuário criado com sucesso.');
+      alert(result.message);
       navigate('/');
       return;
     }

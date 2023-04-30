@@ -53,7 +53,7 @@ export interface TaskListType {
 
 export const taskList = async (taskList: TaskListType) => {
   try {
-    const result = await api.get(`/user/${taskList.userId}/tasks`, {
+    const result = await api.get(`/task/${taskList.userId}/tasks`, {
       params: {
         archived: taskList.archived
       }
@@ -81,7 +81,7 @@ export interface CreateTaskType {
 
 export const createTask = async (task: CreateTaskType) => {
   try {
-    const result = await api.post(`/user/${task.userId}/tasks`, task);
+    const result = await api.post(`/task/${task.userId}/tasks`, task);
     return result.data;
   } catch (error: any) {
     if (error.request.response) {
@@ -102,7 +102,7 @@ export interface DeleteTaskType {
 
 export const deleteTask = async (task: DeleteTaskType) => {
   try {
-    const result = await api.delete(`user/${task.userId}/tasks/${task.id}`);
+    const result = await api.delete(`task/${task.userId}/tasks/${task.id}`);
     return result.data;
   } catch (error: any) {
     if (error.request.response) {
@@ -126,7 +126,7 @@ export interface UpdateTaskType {
 
 export const updateTask = async (task: UpdateTaskType) => {
   try {
-    const result = await api.put(`user/${task.userId}/tasks/${task.id}`, task);
+    const result = await api.put(`task/${task.userId}/tasks/${task.id}`, task);
     return result.data;
   } catch (error: any) {
     if (error.request.response) {
