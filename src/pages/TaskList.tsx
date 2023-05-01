@@ -7,6 +7,7 @@ import {
   creatTaskAction,
   deleteTaskAction,
   selectAll,
+  selectEntities,
   taskListAction,
   updateTaskAction
 } from '../store/modules/TasksSlice';
@@ -26,7 +27,7 @@ const Tasks: React.FC = () => {
   const [message, setAlertMessage] = useState<string>('');
   const [color, setColor] = useState<AlertColor>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [filled, setFiled] = useState<string>('alltasks');
+  const [filterArchived, setFiled] = useState<string>('active');
   const taskList = useAppSelector(selectAll);
   const loginRedux = useAppSelector(state => state.login);
   const navigate = useNavigate();
@@ -39,9 +40,9 @@ const Tasks: React.FC = () => {
       navigate('/');
       return;
     }
-    const archived = filled === 'archived';
+    const archived = filterArchived === 'archived';
     thunkDispatch(taskListAction({ userId: loginRedux.user.id, archived }));
-  }, [loginRedux, navigate, thunkDispatch, filled]);
+  }, [loginRedux, navigate, thunkDispatch, filterArchived]);
 
   const handleAddTask = async (task: CreateTaskType) => {
     const result = await thunkDispatch(
@@ -80,6 +81,7 @@ const Tasks: React.FC = () => {
     thunkDispatch(updateTaskAction(task));
     setOpenModal(false);
     setOpenArchivedModal(false);
+    thunkDispatch(taskListAction({ userId: loginRedux.user.id, archived: filterArchived === 'archived' }));
   };
 
   const handleDeleteOpen = (id: string) => {
@@ -98,7 +100,7 @@ const Tasks: React.FC = () => {
 
   const handleChange = (event: SelectChangeEvent) => {
     setFiled(event.target.value as string);
-    if (filled === 'archived') {
+    if (filterArchived === 'archived') {
       thunkDispatch(taskListAction({ userId: loginRedux.user.id, archived: true }));
     } else {
       thunkDispatch(taskListAction({ userId: loginRedux.user.id, archived: false }));
@@ -126,17 +128,17 @@ const Tasks: React.FC = () => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={filled}
+                  value={filterArchived}
                   label="Status da Task"
                   onChange={handleChange}
                 >
-                  <MenuItem value={'alltasks'}>Todas as Tasks</MenuItem>
+                  <MenuItem value={'active'}>Ativas</MenuItem>
                   <MenuItem value={'archived'}>Arquivadas</MenuItem>
                 </Select>
               </FormControl>
             </Box>
             {taskList
-              .filter(task => task.archived === (filled === 'archived'))
+              .filter(task => task.archived === (filterArchived === 'archived'))
               .map((item: any) => {
                 return item ? (
                   <div key={item.id}>

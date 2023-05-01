@@ -52,6 +52,7 @@ export interface TaskListType {
 }
 
 export const taskList = async (taskList: TaskListType) => {
+  console.log('taskList', taskList);
   try {
     const result = await api.get(`/task/${taskList.userId}/tasks`, {
       params: {

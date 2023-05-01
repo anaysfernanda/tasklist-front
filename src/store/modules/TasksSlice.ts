@@ -59,7 +59,7 @@ export const updateTaskAction = createAsyncThunk('update/tasks', async (task: Up
   };
 });
 
-export const { selectAll, selectById } = taskAdapter.getSelectors((state: any) => state.tasks);
+export const { selectAll, selectById, selectEntities } = taskAdapter.getSelectors((state: any) => state.tasks);
 
 const tasksSlice = createSlice({
   name: 'tasks',
