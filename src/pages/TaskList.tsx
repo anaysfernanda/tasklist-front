@@ -7,7 +7,6 @@ import {
   creatTaskAction,
   deleteTaskAction,
   selectAll,
-  selectEntities,
   taskListAction,
   updateTaskAction
 } from '../store/modules/TasksSlice';
@@ -81,7 +80,6 @@ const Tasks: React.FC = () => {
     thunkDispatch(updateTaskAction(task));
     setOpenModal(false);
     setOpenArchivedModal(false);
-    thunkDispatch(taskListAction({ userId: loginRedux.user.id, archived: filterArchived === 'archived' }));
   };
 
   const handleDeleteOpen = (id: string) => {
